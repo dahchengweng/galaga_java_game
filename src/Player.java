@@ -2,77 +2,34 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Player extends GameObject {
+    private int screenWidth;
 
-    private boolean movingLeft;
-    private boolean movingRight;
-
-    private int speed = 6;
-
-    public Player(
-            int x,
-            int y,
-            int width,
-            int height
-    ) {
-
-        super(x, y, width, height);
-    }
-
-    public void setMovingLeft(boolean value) {
-        movingLeft = value;
-    }
-
-    public void setMovingRight(boolean value) {
-        movingRight = value;
-    }
-
-    public void update(int screenWidth) {
-
-        if (movingLeft) {
-            x -= speed;
-        }
-
-        if (movingRight) {
-            x += speed;
-        }
-
-        // 不可以跑出左邊螢幕
-        if (x < 0) {
-            x = 0;
-        }
-
-        // 不可以跑出右邊螢幕
-        if (x + width > screenWidth) {
-            x = screenWidth - width;
-        }
+    public Player(int x, int y, int screenWidth) {
+        super(x, y, 40, 30, 7);
+        this.screenWidth = screenWidth;
     }
 
     @Override
-    public void update() {
-        // GameObject 要求的方法
+    public void update() {}
+
+    public void moveLeft() {
+        if (x > 10) x -= speed;
+    }
+
+    public void moveRight() {
+        if (x < screenWidth - width - 10) x += speed;
     }
 
     @Override
     public void draw(Graphics g) {
-
-        g.setColor(Color.CYAN);
-
-        int[] xPoints = {
-                x + width / 2,
-                x,
-                x + width
-        };
-
-        int[] yPoints = {
-                y,
-                y + height,
-                y + height
-        };
-
-        g.fillPolygon(
-                xPoints,
-                yPoints,
-                3
-        );
+        g.setColor(Color.WHITE); // Galaga 經典白戰機
+        // 船身
+        g.fillRect(x, y + 10, width, 20);
+        // 船頭
+        g.fillRect(x + 15, y, 10, 10);
+        // 兩側機翼紅點裝飾
+        g.setColor(Color.RED);
+        g.fillRect(x, y + 20, 5, 10);
+        g.fillRect(x + 35, y + 20, 5, 10);
     }
 }

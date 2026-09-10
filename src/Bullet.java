@@ -1,67 +1,37 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 
-public class Bullet {
+public class Bullet extends GameObject {
+    private boolean active = true;
+    private boolean isEnemy; // true: 敵人子彈往下飛, false: 玩家子彈往上飛
 
-    private int x;
-    private int y;
-
-    private int width = 6;
-    private int height = 15;
-
-    private int speed = 8;
-
-    public Bullet(int x, int y) {
-
-        this.x = x;
-        this.y = y;
+    public Bullet(int x, int y, boolean isEnemy) {
+        // 敵人子彈速度慢一點(5)，玩家子彈快一點(10)
+        super(x, y, 4, 12, isEnemy ? 5 : 10);
+        this.isEnemy = isEnemy;
     }
 
+    @Override
     public void update() {
-
-        y -= speed;
+        if (isEnemy) {
+            y += speed; // 敵人子彈往下
+            if (y > 600) active = false;
+        } else {
+            y -= speed; // 玩家子彈往上
+            if (y < 0) active = false;
+        }
     }
 
+    @Override
     public void draw(Graphics g) {
-
-        g.setColor(Color.YELLOW);
-
-        g.fillRect(
-            x,
-            y,
-            width,
-            height
-        );
+        if (isEnemy) {
+            g.setColor(Color.RED); // 敵人子彈為紅色
+        } else {
+            g.setColor(Color.YELLOW); // 玩家子彈為黃色
+        }
+        g.fillRect(x, y, width, height);
     }
 
-    public int getX() {
-
-        return x;
-    }
-
-    public int getY() {
-
-        return y;
-    }
-
-    public int getWidth() {
-
-        return width;
-    }
-
-    public int getHeight() {
-
-        return height;
-    }
-
-    public Rectangle getBounds() {
-
-        return new Rectangle(
-            x,
-            y,
-            width,
-            height
-        );
-    }
+    public boolean isActive() { return active; }
+    public boolean isEnemy() { return isEnemy; }
 }
